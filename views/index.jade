@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  p Добро пожаловать в #{title}
+
+  ul#messages
+  form(action="")
+    input#command(autocomplete="off")
+    button Отправить
