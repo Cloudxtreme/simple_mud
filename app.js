@@ -4,11 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var debug = require('debug')('simple_mud');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-var app = express();
+app.set('port', process.env.PORT || 3000);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname + '/bower_components')));
+app.use('/node_modules', express.static(path.join(__dirname + '/node_modules')));
 
 app.use('/', routes);
 app.use('/users', users);
@@ -57,5 +62,14 @@ app.use(function(err, req, res, next) {
     });
 });
 
+io.on('connection', function(socket){
+    socket.on('chat message', function(msg){
+        io.emit('chat message', msg);
+    });
+});
+
+var server = http.listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + server.address().port);
+});
 
 module.exports = app;

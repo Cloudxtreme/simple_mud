@@ -5,6 +5,18 @@ block content
   p Добро пожаловать в #{title}
 
   ul#messages
-  form(action="")
-    input#command(autocomplete="off")
-    button Отправить
+  form(action='')
+    input#m(autocomplete='off')
+    button Send
+  script(src='/node_modules/socket.io/node_modules/socket.io-client/socket.io.js')
+  script(src='/bower_components/jquery/dist/jquery.js')
+  script.
+    var socket = io();
+    $('form').submit(function(){
+    socket.emit('chat message', $('#m').val());
+    $('#m').val('');
+    return false;
+    });
+    socket.on('chat message', function(msg){
+    $('#messages').append($('<li>').text(msg));
+    });
