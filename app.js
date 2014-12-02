@@ -64,15 +64,17 @@ app.use(function(err, req, res, next) {
 
 io.on('connection', function(socket){
     var socketLocation = 'start location';  //TODO get location from database and join socket to corresponding room
+    var locationDescription = "description of the current location" //TODO get location description from database
     socket.join(socketLocation);
-    io.to(socketLocation).emit('chat message', 'Player ' + socket.id + ' has been connected!');
+    socket.broadcast.to(socketLocation).emit('message', 'Player ' + socket.id + ' has been connected!');
+    socket.emit('message', locationDescription);
 
-    socket.on('chat message', function(msg){
-        io.to(socketLocation).emit('chat message', msg);
+    socket.on('message', function(msg){
+        io.to(socketLocation).emit('message', msg);
     });
 
     socket.on('disconnect', function(msg){
-        io.to(socketLocation).emit('chat message', 'Player ' + socket.id + ' has been disconnected!');
+        io.to(socketLocation).emit('message', 'Player ' + socket.id + ' has been disconnected!');
     })
 });
 
