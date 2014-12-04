@@ -8,6 +8,9 @@ var debug = require('debug')('simple_mud');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+UUID = require('node-uuid');
+var Game = require('./server/game.js');
+var Player = require('./server/player.js');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -62,11 +65,15 @@ app.use(function(err, req, res, next) {
     });
 });
 
+var game = new Game();
+
 io.on('connection', function(socket){
+    socket.userId = UUID();
+    game.onPlayerConnect(new Player(socket.userId, 0, 0, 'user1'));
     var socketLocation = 'start location';  //TODO get location from database and join socket to corresponding room
     var locationDescription = "description of the current location" //TODO get location description from database
     socket.join(socketLocation);
-    socket.broadcast.to(socketLocation).emit('message', 'Player ' + socket.id + ' has been connected!');
+    socket.broadcast.to(socketLocation).emit('message', 'Player ' + socket.userId + ' has been connected!');
     socket.emit('message', locationDescription);
 
     socket.on('message', function(msg){
@@ -74,7 +81,7 @@ io.on('connection', function(socket){
     });
 
     socket.on('disconnect', function(msg){
-        io.to(socketLocation).emit('message', 'Player ' + socket.id + ' has been disconnected!');
+        io.to(socketLocation).emit('message', 'Player ' + socket.userId + ' has been disconnected!');
     })
 });
 
