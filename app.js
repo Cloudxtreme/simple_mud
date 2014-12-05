@@ -69,18 +69,21 @@ var game = new Game();
 
 io.on('connection', function(socket){
     socket.userId = UUID();
-    game.onPlayerConnect(new Player(socket.userId, 0, 0, 'user1'));
+    var player = new Player(socket.userId, 0, 0, 'user1');
+    game.onPlayerConnect(player);
     var socketLocation = 'start location';  //TODO get location from database and join socket to corresponding room
-    var locationDescription = "description of the current location" //TODO get location description from database
+    var locationDescription = "description of the current location"; //TODO get location description from database
     socket.join(socketLocation);
     socket.broadcast.to(socketLocation).emit('message', 'Player ' + socket.userId + ' has been connected!');
     socket.emit('message', locationDescription);
 
     socket.on('message', function(msg){
+        game.onMessageReceive(socket.userId, msg);
         io.to(socketLocation).emit('message', msg);
     });
 
     socket.on('disconnect', function(msg){
+        game.onPlayerDisconnect(socket.userId);
         io.to(socketLocation).emit('message', 'Player ' + socket.userId + ' has been disconnected!');
     })
 });
