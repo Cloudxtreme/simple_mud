@@ -1,18 +1,18 @@
 var cls = require('./lib/class');
 
 module.exports = Entity = cls.Class.extend({
-    init: function(id, x, y){
+    init: function (id, x, y) {
         this.id = id;
         this.x = x;
         this.y = y;
     },
 
-    setPosition: function(x, y){
+    setPosition: function (x, y) {
         this.x = x;
         this.y = y;
     },
 
-    getPosition: function(){
+    getPosition: function () {
         return [
             this.x,
             this.y
