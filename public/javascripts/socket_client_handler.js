@@ -23,7 +23,7 @@ window.onload = function () {
 
 function getCommandType(msg) {
     var commands = {
-        move: ['север', 'юг', 'запад', 'восток']
+        move: ['север', 'юг', 'запад', 'восток', 'вверх', 'вниз']
     };
 
     for (var command in commands) {

@@ -1,6 +1,8 @@
 module.exports = Commands = {
-    'север': 'moveUp',
-    'юг': 'moveDown',
-    'запад': 'moveLeft',
-    'восток': 'moveRight'
+    'север': 'moveNord',
+    'юг': 'moveSouth',
+    'запад': 'moveWest',
+    'восток': 'moveEast',
+    'вверх': 'moveUp',
+    'вниз': 'moveDown'
 };
