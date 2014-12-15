@@ -17,7 +17,7 @@ window.onload = function () {
         $('#messages').append($('<li>').text(msg));
     });
     socket.on('move', function (msg) {
-        $('#messages').append($('<li>').text('Вы находитесь в ' + msg.x + ';' + msg.y));
+        $('#messages').append($('<li>').text('Вы находитесь в ' + msg.x + ';' + msg.y + ';' + msg.z));
     });
 };
 

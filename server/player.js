@@ -4,7 +4,6 @@ var cls = require('./lib/class'),
 module.exports = Player = Character.extend({
     init: function (id, x, y, z, name,  location) {
         this._super(id, x, y, z, name,  location);
-        this.health = 100;
         this.inventory = {};
     },
 
