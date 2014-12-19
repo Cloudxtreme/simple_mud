@@ -1,26 +1,28 @@
 var cls = require('./lib/class'),
-    Entity = require('./entity.js');
+    Entity = require('./entity.js'),
+    HealthState = require('./health_state.js'),
+    Inventory = require('./inventory.js');
+
+var StateEnum = {
+    STAND: 'стоит',
+    LIE: 'лежит',
+    SIT: 'сидит'
+};
+
+var CharacterType = {
+    PLAYER: 'player',
+    NPC: 'npc'
+};
 
 module.exports = Character = Entity.extend({
-    init: function (id, x, y, z, name, locationId) {
+    init: function (id, type,  x, y, z, name, locationId) {
         this._super(id, x, y, z);
+        this.type = type;
         this.name = name;
-        this.bodyParts = {'голова': '100',
-            'тело': '0',
-            'левая кисть': '0',
-            'правая кисть': '0',
-            'левое предплечье': '0',
-            'правое предплечье': '0',
-            'левое плечо': '0',
-            'правое плечо': '0',
-            'левое бедро': '0',
-            'правое бедро': '0',
-            'левая голень': '0',
-            'правая голень': '0'
-        };
-        this.maxPartHealth = 100;
-        this.maxHealth = this.maxPartHealth * this.partsHealth.length;
+        this.bodyParts = new HealthState();
+        this.inventory = new Inventory();
         this.locationId = locationId;
+        this.state = StateEnum.STAND;
     },
 
     moveSouth: function(){
@@ -47,15 +49,23 @@ module.exports = Character = Entity.extend({
         this.z--;
     },
 
+    sitDown: function() {
+        this.state = StateEnum.SIT;
+    },
+
+    standUp: function() {
+        this.state = StateEnum.STAND;
+    },
+
+    lieDown: function() {
+        this.state = StateEnum.LIE;
+    },
+
     getLocationId: function () {
         return this.locationId;
     },
 
-    getCurrentHealth: function(){
-        var currentHealth = 0;
-        this.bodyParts.forEach(function(partHealth){
-            currentHealth += this.bodyParts[partHealth];
-        })
-        return (currentHealth/this.maxHealth)*100;
+    getState: function() {
+        return this.state;
     }
 });

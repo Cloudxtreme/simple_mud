@@ -1,6 +1,6 @@
 var cls = require('./lib/class'),
-    Player = require('./player.js'),
-    Commands = require('./commands.js');
+    Player = require('./character.js'),
+    Command = require('./command.js');
 
 module.exports = Game = cls.Class.extend({
     init: function () {
@@ -16,15 +16,9 @@ module.exports = Game = cls.Class.extend({
     },
 
     onCommandReceive: function (playerId, msg) {
-        var messages = msg.split(' ');
-        if (Commands[messages[0]] && this.players[playerId]) {
-            return Commands[messages[0]];
+        var command = new Command(msg);
+        if (command.getCommand() && this.players[playerId]) {
+            this.players[playerId][command.getCommand()]();
         }
-    },
-
-    onMove: function (playerId, msg) {
-        var command = this.onCommandReceive(playerId, msg);
-        this.players[playerId][command]();
-        return this.players[playerId].getPosition();
     }
 });
